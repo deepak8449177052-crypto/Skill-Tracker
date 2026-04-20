@@ -45,7 +45,11 @@ const updateUserProfile = async (req, res) => {
 
     if (req.body.bio !== undefined) user.bio = req.body.bio;
     if (req.body.avatar !== undefined) user.avatar = req.body.avatar;
-    if (req.body.dateOfBirth !== undefined) user.dateOfBirth = req.body.dateOfBirth;
+    
+    // Safety check for date formatting to prevent "Update failed" errors
+    if (req.body.dateOfBirth && req.body.dateOfBirth.trim() !== "") {
+      user.dateOfBirth = req.body.dateOfBirth;
+    }
 
     const updatedUser = await user.save();
 

@@ -300,6 +300,14 @@ input::placeholder {
   font-weight: 800;
 }
 
+.avatar-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+}
+
 .quiz-page {
   min-height: 100vh;
   padding: 24px;
