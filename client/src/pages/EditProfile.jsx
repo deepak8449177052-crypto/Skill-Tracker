@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import API from "../api/axios";
+import API, { BACKEND_URL } from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 
 const EditProfile = () => {
@@ -114,7 +114,7 @@ const EditProfile = () => {
             >
               {(preview || form.avatar) ? (
                 <img 
-                  src={preview || (form.avatar.startsWith('http') ? form.avatar : `http://localhost:5000${form.avatar}`)} 
+                  src={preview || (form.avatar.startsWith('http') ? form.avatar : `${BACKEND_URL}${form.avatar}`)} 
                   alt="Preview" 
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                 />
