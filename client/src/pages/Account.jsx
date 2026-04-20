@@ -1,7 +1,6 @@
 
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { BACKEND_URL } from "../api/axios";
 
 
 const Account = () => {
@@ -18,7 +17,7 @@ const Account = () => {
         <div className="card profile-card">
           {user?.avatar ? (
             <img 
-              src={user.avatar.startsWith('http') ? user.avatar : `${BACKEND_URL}${user.avatar}`} 
+              src={user.avatar.startsWith('http') ? user.avatar : `${import.meta.env.PROD ? "" : "http://localhost:5000"}${user.avatar}`} 
               alt="Avatar" 
               className="avatar-circle" 
               style={{ objectFit: 'cover' }} 

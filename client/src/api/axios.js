@@ -1,12 +1,8 @@
 import axios from "axios";
 
-const BACKEND_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? "" : "http://localhost:5000");
-
 const API = axios.create({
-  baseURL: `${BACKEND_URL}/api`,
+  baseURL: import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? "/api" : "http://localhost:5000/api"),
 });
-
-export { BACKEND_URL };
 
 API.interceptors.request.use((config) => {
   const userInfo = localStorage.getItem("userInfo");
