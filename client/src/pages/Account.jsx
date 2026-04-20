@@ -15,9 +15,18 @@ const Account = () => {
 
       <div className="account-grid">
         <div className="card profile-card">
-          <div className="avatar-circle">
-            {user?.name?.charAt(0)?.toUpperCase() || "U"}
-          </div>
+          {user?.avatar ? (
+            <img 
+              src={user.avatar.startsWith('http') ? user.avatar : `http://localhost:5000${user.avatar}`} 
+              alt="Avatar" 
+              className="avatar-circle" 
+              style={{ objectFit: 'cover' }} 
+            />
+          ) : (
+            <div className="avatar-circle">
+              {user?.name?.charAt(0)?.toUpperCase() || "U"}
+            </div>
+          )}
 
           <h2>{user?.name}</h2>
           <p>{user?.email}</p>
@@ -39,7 +48,16 @@ const Account = () => {
 
         <div className="card">
           <h2>Profile Information</h2>
-          <p>Personal details & bio</p>
+          <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div>
+              <strong style={{ fontSize: '0.9rem', color: 'var(--text-muted, #aaa)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Bio</strong>
+              <p style={{ marginTop: '0.4rem', lineHeight: '1.5' }}>{user?.bio || "No bio added yet. Edit your profile to add one!"}</p>
+            </div>
+            <div>
+              <strong style={{ fontSize: '0.9rem', color: 'var(--text-muted, #aaa)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Date of Birth</strong>
+              <p style={{ marginTop: '0.4rem' }}>{user?.dateOfBirth ? new Date(user.dateOfBirth).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : "Not provided"}</p>
+            </div>
+          </div>
         </div>
 
         <div className="card">

@@ -25,6 +25,19 @@ const userSchema = new mongoose.Schema(
       enum: ["student", "admin"],
       default: "student",
     },
+    bio: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    avatar: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    dateOfBirth: {
+      type: Date,
+    },
     notifications: {
       email: {
         type: Boolean,

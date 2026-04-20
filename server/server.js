@@ -12,8 +12,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-
-// The main route will be handled below by the static folder, removing this test route.
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/api/skills", require("./routes/skillRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));

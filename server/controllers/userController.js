@@ -43,6 +43,10 @@ const updateUserProfile = async (req, res) => {
       user.email = req.body.email.trim().toLowerCase();
     }
 
+    if (req.body.bio !== undefined) user.bio = req.body.bio;
+    if (req.body.avatar !== undefined) user.avatar = req.body.avatar;
+    if (req.body.dateOfBirth !== undefined) user.dateOfBirth = req.body.dateOfBirth;
+
     const updatedUser = await user.save();
 
     res.status(200).json({
@@ -52,6 +56,9 @@ const updateUserProfile = async (req, res) => {
         _id: updatedUser._id,
         name: updatedUser.name,
         email: updatedUser.email,
+        bio: updatedUser.bio,
+        avatar: updatedUser.avatar,
+        dateOfBirth: updatedUser.dateOfBirth,
         notifications: updatedUser.notifications,
       },
     });
@@ -147,9 +154,45 @@ const updateNotifications = async (req, res) => {
   }
 };
 
+const uploadAvatar = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No file uploaded",
+      });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Save the relative path
+    user.avatar = `/uploads/${req.file.filename}`;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Avatar uploaded successfully",
+      avatar: user.avatar,
+    });
+  } catch (error) {
+    console.error("Upload avatar error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error during file upload",
+    });
+  }
+};
+
 module.exports = {
   getUserProfile,
   updateUserProfile,
   changePassword,
   updateNotifications,
+  uploadAvatar,
 };
