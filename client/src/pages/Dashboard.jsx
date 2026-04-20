@@ -6,36 +6,50 @@ const Dashboard = () => {
   const { user } = useAuth();
 
   const [skills, setSkills] = useState([]);
+  const [availableSkills, setAvailableSkills] = useState([]);
   const [form, setForm] = useState({
     name: "",
     level: "Beginner",
     hoursPracticed: 0,
   });
 
-  const loadSkills = async () => {
+  const predefinedSkills = [
+    { name: "JavaScript", id: "javascript" },
+    { name: "Python", id: "python" },
+    { name: "React.js", id: "react" },
+    { name: "Node.js", id: "node" },
+    { name: "MongoDB", id: "mongodb" },
+    { name: "Express.js", id: "express" },
+    { name: "HTML & CSS", id: "htmlcss" }
+  ];
+
+  const loadDashboardData = async () => {
     try {
-      const { data } = await api.get("/skills");
-      console.log("Skills API response:", data);
+      // Load user's added skills
+      const { data: userSkillsData } = await api.get("/skills");
+      const userSkills = Array.isArray(userSkillsData) ? userSkillsData : userSkillsData.skills || [];
+      setSkills(userSkills);
 
-      const skillsData = Array.isArray(data)
-        ? data
-        : Array.isArray(data.skills)
-        ? data.skills
-        : [];
+      // Load skills that have practice sets from the backend
+      const { data: quizData } = await api.get("/quiz/skills");
+      setAvailableSkills(quizData.skills || []);
 
-      setSkills(skillsData);
     } catch (error) {
-      console.error("Error loading skills:", error);
-      setSkills([]);
+      console.error("Error loading dashboard data:", error);
     }
   };
 
   useEffect(() => {
-    loadSkills();
+    loadDashboardData();
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!form.name) {
+      alert("Please select a skill");
+      return;
+    }
 
     try {
       await api.post("/skills", {
@@ -49,7 +63,7 @@ const Dashboard = () => {
         hoursPracticed: 0,
       });
 
-      loadSkills();
+      loadDashboardData();
     } catch (error) {
       console.error("Error adding skill:", error);
     }
@@ -100,13 +114,22 @@ const Dashboard = () => {
           <h2>Add Skill</h2>
 
           <form className="skill-form" onSubmit={handleSubmit}>
-            <input
-              type="text"
-              placeholder="Skill name"
+            <select
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
-            />
+              className="skill-select"
+            >
+              <option value="">Select a Skill</option>
+              {predefinedSkills.map((s) => {
+                const isAvailable = availableSkills.includes(s.id);
+                return (
+                  <option key={s.id} value={s.id} disabled={!isAvailable}>
+                    {s.name} {!isAvailable ? "(Upcoming)" : ""}
+                  </option>
+                );
+              })}
+            </select>
 
             <select
               value={form.level}
@@ -139,13 +162,13 @@ const Dashboard = () => {
               <p>No skills added yet.</p>
             ) : (
               safeSkills.map((skill) => (
-                <div className="skill-item" key={skill._id}>
-                  <div>
-                    <strong>{skill.name}</strong>
-                    <p>
-                      {skill.level} • {skill.hoursPracticed} hrs
-                    </p>
-                  </div>
+                  <div className="skill-item" key={skill._id}>
+                    <div>
+                      <strong style={{ textTransform: 'capitalize' }}>{skill.name}</strong>
+                      <p>
+                        {skill.level} • {skill.hoursPracticed} hrs
+                      </p>
+                    </div>
 
                   <button
                     className="danger-btn"
