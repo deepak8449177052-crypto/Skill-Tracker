@@ -91,8 +91,8 @@ const Dashboard = () => {
   }, [safeSkills]);
 
   return (
-    <div className="page-container">
-      <div className="hero-card">
+    <div className="page-container animate-enter">
+      <div className="hero-card delay-1">
         <h1>Welcome back, {user?.name || "User"}!</h1>
         <p>Track and improve your skills progress here.</p>
       </div>

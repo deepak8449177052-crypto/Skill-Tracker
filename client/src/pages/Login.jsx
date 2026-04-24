@@ -37,7 +37,7 @@ const Login = () => {
 
   return (
     <div className="auth-page">
-      <form className="auth-card" onSubmit={handleSubmit}>
+      <form className="auth-card animate-enter" onSubmit={handleSubmit}>
         <h1>Skill Tracker</h1>
         <h2>Welcome Back!</h2>
         <p>Login to your account</p>
